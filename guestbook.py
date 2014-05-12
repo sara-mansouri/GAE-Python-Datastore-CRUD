@@ -102,8 +102,15 @@ class Guestbook(webapp2.RequestHandler):
         Greeting.key.delete()
 
 class MainHandler(webapp2.RequestHandler):
-    #def get(self):
-       # self.response.out.write(html)
+    def get(self):
+        template_values = {
+            'greetings': "",
+            'guestbook_name': "",
+            'url': "",
+            'url_linktext': "",
+        }
+        template = JINJA_ENVIRONMENT.get_template('index.html')
+        self.response.write(template.render(template_values))
     def post(self):
         firstName = self.request.get("firstName")
         familyName = self.request.get("familyName")
