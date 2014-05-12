@@ -101,7 +101,18 @@ class Guestbook(webapp2.RequestHandler):
         #sandy.key.delete()
         Greeting.key.delete()
 
+class MainHandler(webapp2.RequestHandler):
+    #def get(self):
+       # self.response.out.write(html)
+    def post(self):
+        firstName = self.request.get("firstName")
+        familyName = self.request.get("familyName")
+        self.response.out.write("First Name: " + firstName 
+           + " Family Name: " + familyName)
+ 
+
 application = webapp2.WSGIApplication([
-    ('/', MainPage),
-    ('/sign', Guestbook),
+    #('/', MainPage),
+    #('/sign', Guestbook),
+    ('/', MainHandler)
 ], debug=True)
