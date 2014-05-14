@@ -14,7 +14,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>C:\wamp\www\git\1\</CommandLineArguments>
+    <CommandLineArguments>--clear_datastore C:\wamp\www\git\1\</CommandLineArguments>
     <InterpreterPath>
     </InterpreterPath>
     <InterpreterArguments>

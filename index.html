@@ -54,10 +54,11 @@
                       </div>
                       <div style="width: 16%; float: left; border: 0px solid black; height: 18px; overflow: hidden; ">
                          
-                          <form method="post" action="/">
+                          <form action="/retrieve?guestbook_name={{ guestbook_name }}" method="post">
+                              <!--action="/"-->
                               <button type="submit" value="{{ greeting.name }}" name="editwhat" style="width:50%; float:right">Edit</button>
-                          <!--</form>
-                          <form method="post" action="/">-->
+                          </form>
+                          <form action="/delete?guestbook_name={{ guestbook_name }}" method="post" >
                               <button type="submit" value="{{ greeting.name }}" name="deletewhat" style="width:50%; float:right">Delete</button>
                           </form>
                       </div>
@@ -85,6 +86,7 @@
                   <div>Family Name<br /><textarea value="{{ aaa_fname }}" name="fname" rows="1" cols="40">{{ aaa_fname }}</textarea></div>
                   <div>Email Address<br /><textarea value="{{ aaa_email }}" name="email" rows="1" cols="40">{{ aaa_email }}</textarea></div>
                   <div>Note<br /><textarea value="{{ aaa_note }}" name="content" rows="3" cols="40">{{ aaa_note }}</textarea></div>
+
                   <div style="margin-left: auto; margin-right: auto; width:100%;"><button type="submit" value="{{ aaa_name }}" name="edwhat">Save</button></div>
               </form>
           </div>

@@ -60,26 +60,28 @@ class MainPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
 
-    #def post(self):
-    #    delWhat = self.request.get("deletewhat")
+class deleting(webapp2.RequestHandler):
+    
+    def post(self):
+        delWhat = self.request.get("deletewhat")
         
-    #    report = Greeting.query(Greeting.name == delWhat).get()
-    #    # Delete the entity
-    #    report.key.delete()
-    #    #ndb.Key(Greeting, int(delWhat)).delete()
-        
-    #    self.response.write(delWhat)
+        report = Greeting.query(Greeting.name == delWhat).get()
+        # Delete the entity
+        report.key.delete()
+        #ndb.Key(Greeting, int(delWhat)).delete()    
+        guestbook_name = self.request.get('guestbook_name',
+                                          DEFAULT_GUESTBOOK_NAME)
 
+        query_params = {'guestbook_name': guestbook_name}
+        self.redirect('/?' + urllib.urlencode(query_params))
+
+
+class retrieving(webapp2.RequestHandler):
     def post(self):
         
         edWhat = self.request.get("editwhat")
         
-       # report = Greeting.query(Greeting.name==edWhat).get()
-        #report.key.delete()
-
-        #guestbook_name = self.request.get('guestbook_name',
-        #                                  DEFAULT_GUESTBOOK_NAME)
-        #report = Greeting(parent=guestbook_key(edWhat))
+       
         report = Greeting.query(Greeting.name == edWhat).get()
         
         template_values = {
@@ -93,19 +95,7 @@ class MainPage(webapp2.RequestHandler):
         self.response.write(template.render(template_values))
 
 
-      
-        #report.name = self.request.get('name')
-        #report.fname = self.request.get('fname')
-        #report.email = self.request.get('email')
-        #report.content = self.request.get('content')
-        #report.put()
-        
-
-       # self.response.append('name':report.name)
-
-         #response.append({'user_id':
-       # self.response.write(delWhat)
-
+        #-----------------------
         
 class editing(webapp2.RequestHandler):
 
@@ -115,23 +105,21 @@ class editing(webapp2.RequestHandler):
         # will be consistent.  However, the write rate to a single entity group
         # should be limited to ~1/second.
 
-        edWhat = self.request.get("editwhat")
+        edWhat = self.request.get("edwhat")
 
         report = Greeting.query(Greeting.name == edWhat).get()
 
         
-        #greeting.name = self.request.get('name')
-        #greeting.fname = self.request.get('fname')
-        #greeting.email = self.request.get('email')
-        #greeting.content = self.request.get('content')
-        #greeting.put()
 
         report.name = self.request.get('name')
         report.fname = self.request.get('fname')
         report.email = self.request.get('email')
         report.content = self.request.get('content')
         report.put()
-        
+        guestbook_name = DEFAULT_GUESTBOOK_NAME
+
+        query_params = {'guestbook_name': guestbook_name}
+        self.redirect('/?' + urllib.urlencode(query_params))
 
         
 class Guestbook(webapp2.RequestHandler):
@@ -145,6 +133,7 @@ class Guestbook(webapp2.RequestHandler):
                                           DEFAULT_GUESTBOOK_NAME)
         greeting = Greeting(parent=guestbook_key(guestbook_name))
 
+
         if users.get_current_user():
             greeting.author = users.get_current_user()
 
@@ -155,25 +144,10 @@ class Guestbook(webapp2.RequestHandler):
         greeting.content = self.request.get('content')
         greeting.put()
 
+
         query_params = {'guestbook_name': guestbook_name}
         self.redirect('/?' + urllib.urlencode(query_params))
 
-    def Edit(self):
-        #https://developers.google.com/appengine/docs/python/ndb/entities#creating_entities
-        #sandy = key.get()
-        #sandy.email = 'sandy@gmail.co.uk'
-        #sandy.put()
-        Greetings = Greeting.key.get()
-        greeting.name = self.request.get('name')
-        greeting.fname = self.request.get('fname')
-        greeting.email = self.request.get('email')
-        greeting.content = self.request.get('content')
-        Greeting.put()
-
-    def Delete(self):
-        #https://developers.google.com/appengine/docs/python/ndb/entities#creating_entities
-        #sandy.key.delete()
-        Greeting.key.delete()
 
 class MainHandler(webapp2.RequestHandler):
     def get(self):
@@ -194,5 +168,7 @@ class MainHandler(webapp2.RequestHandler):
 application = webapp2.WSGIApplication([('/', MainPage),
     ('/sign', Guestbook),
     ('/edit', editing),
+    ('/delete', deleting),
+    ('/retrieve', retrieving),
     #('/', MainHandler)
 ], debug=True)
