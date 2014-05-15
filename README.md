@@ -1,13 +1,16 @@
 # Guestbook with Namespaces
 
+This application is for practicing programming in Python an storing 
+data in GAE Datastore. Main functionalities are entering, updating and 
+deleting data of database. data is received from a small form.
+You Can see a demo of application here:
+http://s-mansouri.appspot.com/
+
 This application implements the Python [Guestbook sample][7] but uses
 datastore namespaces to keep values in separate places.
-
 Guestbook is an example application showing basic usage of Google App
-Engine. Users can read & write text messages and optionaly log-in with
-their Google account. Messages are stored in App Engine (NoSQL)
-High Replication Datastore (HRD) and retrieved using a strongly consistent
-(ancestor) query.
+Engine.Data is stored in App Engine (NoSQL) High Replication Datastore 
+(HRD) and retrieved using a strongly consistent(ancestor) query.
 
 ## Products
 - [App Engine][1]
