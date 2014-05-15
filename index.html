@@ -70,7 +70,7 @@
 
               
           </div>
-          <div style="width: 45%; background-color: #e5eecc; padding-left: 15px; padding-right: 15px; border-radius: 5%;">
+          <div id="DefaultMode" style="width: 45%; background-color: #e5eecc; padding-left: 15px; padding-right: 15px; border-radius: 5%; visibility:{{VIS1}}" >
               <form action="/sign?guestbook_name={{ guestbook_name }}" method="post">
                   <div>Name<br /><textarea name="name" rows="1" cols="40">{{ aaa_name }}</textarea></div>
                   <div>Family Name<br /><textarea value="{{ aaa_fname }}" name="fname" rows="1" cols="40"></textarea></div>
@@ -80,7 +80,7 @@
 
               </form>
           </div>
-          <div style="width: 45%; background-color: #e5eecc; padding-left: 15px; padding-right: 15px; border-radius: 5%;">
+          <div id="EditMode" style="width: 40%; background-color: #e5eecc; padding-left: 15px; padding-right: 15px; border-radius: 5%; position: absolute; left: 67px; top: 100px; visibility:{{VIS}};" >
               <form action="/edit?guestbook_name={{ guestbook_name }}" method="post">
                   <div>Name<br /><textarea name="name" rows="1" cols="40">{{ aaa_name }}</textarea></div>
                   <div>Family Name<br /><textarea value="{{ aaa_fname }}" name="fname" rows="1" cols="40">{{ aaa_fname }}</textarea></div>

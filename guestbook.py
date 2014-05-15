@@ -54,6 +54,7 @@ class MainPage(webapp2.RequestHandler):
             'guestbook_name': urllib.quote_plus(guestbook_name),
             'url': url,
             'url_linktext': url_linktext,
+            'VIS':'hidden',
         }
 
         template = JINJA_ENVIRONMENT.get_template('index.html')
@@ -89,10 +90,18 @@ class retrieving(webapp2.RequestHandler):
             'aaa_fname': report.fname,
             'aaa_email': report.email,
             'aaa_note': report.content,
+            'VIS':'visibile',
+            'VIS1':'hidden',
         }
 
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
+
+        #visibility = self.find_element_by_id("EditMode").get_attribute("visibility")
+       # find_element_by_id("EditMode").setAttribute('style', 'visibility: visibile');
+        #is_displayed()
+       # visibility = visible
+        #driver.find_element_by_id("capchta").send_keys(captcha_value)
 
 
         #-----------------------
@@ -149,26 +158,11 @@ class Guestbook(webapp2.RequestHandler):
         self.redirect('/?' + urllib.urlencode(query_params))
 
 
-class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        template_values = {
-            'greetings': "",
-            'guestbook_name': "",
-            'url': "",
-            'url_linktext': "",
-        }
-        template = JINJA_ENVIRONMENT.get_template('index.html')
-        self.response.write(template.render(template_values))
-    def post(self):
-        firstName = self.request.get("firstName")
-        familyName = self.request.get("familyName")
-        self.response.out.write("First Name: " + firstName + " Family Name: " + familyName)
- 
 
 application = webapp2.WSGIApplication([('/', MainPage),
     ('/sign', Guestbook),
     ('/edit', editing),
     ('/delete', deleting),
     ('/retrieve', retrieving),
-    #('/', MainHandler)
+   
 ], debug=True)
