@@ -12,7 +12,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.di
     extensions=['jinja2.ext.autoescape'])
 
 DEFAULT_GUESTBOOK_NAME = 'default_guestbook'
-
+counter = 0
 
 # We set a parent key on the 'Greetings' to ensure that they are all in the
 # same
@@ -21,12 +21,40 @@ DEFAULT_GUESTBOOK_NAME = 'default_guestbook'
 def guestbook_key(guestbook_name=DEFAULT_GUESTBOOK_NAME):
     """Constructs a Datastore key for a Guestbook entity with guestbook_name."""
     return ndb.Key('Guestbook', guestbook_name)
+       
+class Guestbook(webapp2.RequestHandler):
 
+    def post(self):
+        # We set the same parent key on the 'Greeting' to ensure each Greeting
+        # is in the same entity group.  Queries across the single entity group
+        # will be consistent.  However, the write rate to a single entity group
+        # should be limited to ~1/second.
+        guestbook_name = self.request.get('guestbook_name',
+                                          DEFAULT_GUESTBOOK_NAME)
+        greeting = Greeting(parent=guestbook_key(guestbook_name))
+
+
+        if users.get_current_user():
+            greeting.author = users.get_current_user()
+
+        global counter
+        counter +=1
+        greeting.id2=counter 
+        greeting.name = self.request.get('name')
+        greeting.fname = self.request.get('fname')
+        greeting.email = self.request.get('email')
+        greeting.content = self.request.get('content')
+        greeting.put()
+
+       
+        query_params = {'guestbook_name': guestbook_name}
+        self.redirect('/?' + urllib.urlencode(query_params))
 
 class Greeting(ndb.Model):
     """Models an individual Guestbook entry with author, content, and date."""
-    author = ndb.UserProperty()
     
+    id2 = ndb.IntegerProperty(indexed=True)
+    author = ndb.UserProperty()
     name = ndb.StringProperty(indexed=True)
     fname = ndb.StringProperty(indexed=False)
     email = ndb.StringProperty(indexed=False)
@@ -50,6 +78,7 @@ class MainPage(webapp2.RequestHandler):
             url_linktext = 'Login'
 
         template_values = {
+
             'greetings': greetings,
             'guestbook_name': urllib.quote_plus(guestbook_name),
             'url': url,
@@ -66,7 +95,7 @@ class deleting(webapp2.RequestHandler):
     def post(self):
         delWhat = self.request.get("deletewhat")
         
-        report = Greeting.query(Greeting.name == delWhat).get()
+        report = Greeting.query(Greeting.id2 == int(delWhat)).get()
         # Delete the entity
         report.key.delete()
         #ndb.Key(Greeting, int(delWhat)).delete()    
@@ -83,9 +112,10 @@ class retrieving(webapp2.RequestHandler):
         edWhat = self.request.get("editwhat")
         
        
-        report = Greeting.query(Greeting.name == edWhat).get()
+        report = Greeting.query(Greeting.id2 == int(edWhat)).get()
         
         template_values = {
+            'aaa_id2':edWhat,
             'aaa_name': report.name,
             'aaa_fname': report.fname,
             'aaa_email': report.email,
@@ -116,8 +146,8 @@ class editing(webapp2.RequestHandler):
 
         edWhat = self.request.get("edwhat")
 
-        report = Greeting.query(Greeting.name == edWhat).get()
 
+        report = Greeting.query(Greeting.id2 == int(edWhat)).get()
         
 
         report.name = self.request.get('name')
@@ -130,33 +160,7 @@ class editing(webapp2.RequestHandler):
         query_params = {'guestbook_name': guestbook_name}
         self.redirect('/?' + urllib.urlencode(query_params))
 
-        
-class Guestbook(webapp2.RequestHandler):
-
-    def post(self):
-        # We set the same parent key on the 'Greeting' to ensure each Greeting
-        # is in the same entity group.  Queries across the single entity group
-        # will be consistent.  However, the write rate to a single entity group
-        # should be limited to ~1/second.
-        guestbook_name = self.request.get('guestbook_name',
-                                          DEFAULT_GUESTBOOK_NAME)
-        greeting = Greeting(parent=guestbook_key(guestbook_name))
-
-
-        if users.get_current_user():
-            greeting.author = users.get_current_user()
-
-        
-        greeting.name = self.request.get('name')
-        greeting.fname = self.request.get('fname')
-        greeting.email = self.request.get('email')
-        greeting.content = self.request.get('content')
-        greeting.put()
-
-
-        query_params = {'guestbook_name': guestbook_name}
-        self.redirect('/?' + urllib.urlencode(query_params))
-
+ 
 
 
 application = webapp2.WSGIApplication([('/', MainPage),

@@ -2,7 +2,8 @@
 
 This application is for practicing programming in Python an storing 
 data in GAE Datastore. Main functionalities are entering, updating and 
-deleting data of database. data is received from a small form.
+deleting data of database. data is received from a small form and is 
+displayed on a table.
 You Can see a demo of application here:
 http://s-mansouri.appspot.com/
 
