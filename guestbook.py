@@ -3,7 +3,7 @@ import urllib
 
 from google.appengine.api import users
 from google.appengine.ext import ndb
-
+from google.appengine.ext import db
 
 import jinja2
 import webapp2
@@ -13,7 +13,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.di
 
 DEFAULT_GUESTBOOK_NAME = 'default_guestbook'
 counter = 0
-
+#pname=name
 # We set a parent key on the 'Greetings' to ensure that they are all in the
 # same
 # entity group.  Queries across the single entity group will be consistent.
@@ -37,9 +37,14 @@ class Guestbook(webapp2.RequestHandler):
         if users.get_current_user():
             greeting.author = users.get_current_user()
 
+        #latestGreeting = 
+
         global counter
-        counter +=1
-        greeting.id2=counter 
+        counter+=1
+        greeting.id2=counter
+
+        #id2 +=1
+        #greeting.id2=latestGreeting.id2 + 1 
         greeting.name = self.request.get('name')
         greeting.fname = self.request.get('fname')
         greeting.email = self.request.get('email')
@@ -53,13 +58,15 @@ class Guestbook(webapp2.RequestHandler):
 class Greeting(ndb.Model):
     """Models an individual Guestbook entry with author, content, and date."""
     
-    id2 = ndb.IntegerProperty(indexed=True)
+    id2 = ndb.GenericProperty(indexed=True)
+    #id3 = int(id2)+1
     author = ndb.UserProperty()
     name = ndb.StringProperty(indexed=True)
     fname = ndb.StringProperty(indexed=False)
     email = ndb.StringProperty(indexed=False)
     content = ndb.StringProperty(indexed=False)
     date = ndb.DateTimeProperty(auto_now_add=True)
+    
 
 
 class MainPage(webapp2.RequestHandler):
@@ -67,8 +74,12 @@ class MainPage(webapp2.RequestHandler):
     def get(self):
         guestbook_name = self.request.get('guestbook_name',
                                           DEFAULT_GUESTBOOK_NAME)
-        greetings_query = Greeting.query(ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
+        greetings_query = Greeting.query(ancestor=guestbook_key(guestbook_name)).order(Greeting.date)
+        #greetings_query = Greeting.query(ancestor=guestbook_key(guestbook_name))
         greetings = greetings_query.fetch(10)
+        #greetings = greetings_query.order(-Greeting.name)
+
+        #greetings = greetings_query.filter(-Greeting.id2>,1)
 
         if users.get_current_user():
             url = users.create_logout_url(self.request.uri)
@@ -160,13 +171,137 @@ class editing(webapp2.RequestHandler):
         query_params = {'guestbook_name': guestbook_name}
         self.redirect('/?' + urllib.urlencode(query_params))
 
- 
+        
+class a(webapp2.RequestHandler):
 
+    def get(self):
+        guestbook_name = self.request.get('guestbook_name',
+                                          DEFAULT_GUESTBOOK_NAME)
+        greetings_query = Greeting.query(ancestor=guestbook_key(guestbook_name)).order(Greeting.date)
+        greetings = greetings_query.fetch(10)
+
+        
+        if users.get_current_user():
+            url = users.create_logout_url(self.request.uri)
+            url_linktext = 'Logout'
+        else:
+            url = users.create_login_url(self.request.uri)
+            url_linktext = 'Login'
+
+        template_values = {
+
+            'greetings': greetings,
+            'guestbook_name': urllib.quote_plus(guestbook_name),
+            'url': url,
+            'url_linktext': url_linktext,
+            'VIS':'hidden',
+        }
+
+        template = JINJA_ENVIRONMENT.get_template('index.html')
+        self.response.write(template.render(template_values))
+
+    
+        
+
+class d(webapp2.RequestHandler):
+    def get(self):
+        guestbook_name = self.request.get('guestbook_name',
+                                          DEFAULT_GUESTBOOK_NAME)
+        greetings_query = Greeting.query(ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
+        greetings = greetings_query.fetch(10)
+   
+        if users.get_current_user():
+            url = users.create_logout_url(self.request.uri)
+            url_linktext = 'Logout'
+        else:
+            url = users.create_login_url(self.request.uri)
+            url_linktext = 'Login'
+
+        template_values = {
+
+            'greetings': greetings,
+            'guestbook_name': urllib.quote_plus(guestbook_name),
+            'url': url,
+            'url_linktext': url_linktext,
+            'VIS':'hidden',
+        }
+
+        template = JINJA_ENVIRONMENT.get_template('index.html')
+        self.response.write(template.render(template_values))
+class name(webapp2.RequestHandler):
+    def get(self):
+        guestbook_name = self.request.get('guestbook_name',
+                                          DEFAULT_GUESTBOOK_NAME)
+        #greetings_query = Greeting.query(ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
+        greetings_query = Greeting.query(ancestor=guestbook_key(guestbook_name))
+        #greetings = greetings_query.fetch(10)
+        greetings = greetings_query.order(Greeting.name)
+
+        #greetings = greetings_query.filter(-Greeting.id2>,1)
+        
+        if users.get_current_user():
+            url = users.create_logout_url(self.request.uri)
+            url_linktext = 'Logout'
+        else:
+            url = users.create_login_url(self.request.uri)
+            url_linktext = 'Login'
+
+        template_values = {
+
+            'greetings': greetings,
+            'guestbook_name': urllib.quote_plus(guestbook_name),
+            'url': url,
+            'url_linktext': url_linktext,
+            'VIS':'hidden',
+        }
+
+        template = JINJA_ENVIRONMENT.get_template('index.html')
+        self.response.write(template.render(template_values))
+
+class searchname(webapp2.RequestHandler):
+    def get(self):
+        guestbook_name = self.request.get('guestbook_name',
+                                          DEFAULT_GUESTBOOK_NAME)
+        #greetings_query = Greeting.query(ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
+        greetings_query = Greeting.query(ancestor=guestbook_key(guestbook_name))
+        greetings = greetings_query.fetch(10)
+        #greetings = greetings_query.order(Greeting.name)
+        
+        pname = self.request.get("pname")
+        greetings = greetings_query.filter(Greeting.name==pname)
+        #greetings = greetings_query.filter(Greeting.id2=1)
+        if users.get_current_user():
+            url = users.create_logout_url(self.request.uri)
+            url_linktext = 'Logout'
+        else:
+            url = users.create_login_url(self.request.uri)
+            url_linktext = 'Login'
+
+        template_values = {
+
+            'greetings': greetings,
+            'guestbook_name': urllib.quote_plus(guestbook_name),
+            'url': url,
+            'url_linktext': url_linktext,
+            'VIS':'hidden',
+        }
+
+        template = JINJA_ENVIRONMENT.get_template('index.html')
+        self.response.write(template.render(template_values))
+
+#def SearchName(pname):
+#    """Constructs a Datastore key for a Guestbook entity with guestbook_name."""
+#    return ndb.Key('greetings.name', pname)
+       
 
 application = webapp2.WSGIApplication([('/', MainPage),
     ('/sign', Guestbook),
     ('/edit', editing),
     ('/delete', deleting),
     ('/retrieve', retrieving),
+    ('/a', a),
+    ('/d', d),
+    ('/name', name),
+    ('/searchname',searchname)
    
 ], debug=True)

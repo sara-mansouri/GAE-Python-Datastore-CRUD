@@ -13,11 +13,44 @@
           <div style="width: 45%; float: right; background-color: #e5eecc; padding-left: 15px; padding-right: 15px; min-height: 246px; border-radius:5%; ">
 
               Result From Datastore
+
+              <form action="/a?guestbook_name={{ guestbook_name }}" method="get">
+                  <!--action="/"-->
+                  <button type="submit"  name="asc" style="width:25%; float:right">Id ascending</button>
+              </form>
+              <form action="/d?guestbook_name={{ guestbook_name }}" method="get">
+                  <!--action="/"-->
+                  <button type="submit"  name="asc" style="width:25%; float:right">Id descending</button>
+              </form>
+              <form action="/name?guestbook_name={{ guestbook_name }}" method="get">
+                  <!--action="/"-->
+                  <button type="submit" name="asc" style="width:50%; float:right">Alphabetical Name List</button>
+              </form>
+              <!--<form>
+                  Search for Name:
+                  <input value="{{ pname }}" name="pname">
+                  <input type="submit" value="Search">
+              </form>-->
+              <form action="/searchname?guestbook_name={{ guestbook_name }},pname={{ pname }}" method="get">
+                  Search for Name:
+                  <input value="{{ pname }}" name="pname">
+                  <button type="submit" name="search" >Search for Names</button>
+              </form>
               <br />
+            
              
                   <div style="width:100%; background-color:white; border:1px solid black;">
                       <div style="width: 10%;  float: left; border-right: 1px solid black;">
-                          ID
+                          
+                          <form action="/a?guestbook_name={{ guestbook_name }}" method="get">
+                              <!--action="/"-->
+                              <button type="submit" name="asc" style="width: 15px; float: right; height: 16px; background-image: url( https://www.google.com/help/hc/images/sites_icon_arrow_up_small.gif); "></button>
+                          </form>
+                          <form action="/d?guestbook_name={{ guestbook_name }}" method="get">
+                              <!--action="/"-->
+                              <button type="submit" name="asc" style="width: 15px; float: right; height: 16px; background-image: url( https://www.google.com/help/hc/images/sites_icon_arrow_down_small.gif); "></button>
+                          </form>
+                                                    
                       </div>
                      
                       <div style="width: 10%;  float: left; border-right: 1px solid black;">
@@ -33,7 +66,7 @@
                         Note
                       </div>
                       <div style="width: 16%; float: left; border: 0px solid black; height: 18px; overflow: hidden; ">
-                          Edit/Delete
+                          
                       </div>
 
                   {% for greeting in greetings %}
@@ -60,10 +93,10 @@
                          
                           <form action="/retrieve?guestbook_name={{ guestbook_name }}" method="post">
                               <!--action="/"-->
-                              <button type="submit" value="{{ greeting.id2 }}" name="editwhat" style="width:50%; float:right">Edit</button>
+                              <button type="submit" value="{{ greeting.id2 }}" name="editwhat" style="width:20px; float: right; height:18px; background-image: url(http://png-4.findicons.com/files/icons/2226/matte_basic/16/edit.png); "> </button>
                           </form>
                           <form action="/delete?guestbook_name={{ guestbook_name }}" method="post" >
-                              <button type="submit" value="{{ greeting.id2 }}" name="deletewhat" style="width:50%; float:right">Delete</button>
+                              <button type="submit" value="{{ greeting.id2 }}" name="deletewhat" style="width: 20px; float: right; height: 18px; background-image: url( http://icons.iconarchive.com/icons/visualpharm/must-have/16/Delete-icon.png); "> </button>
                           </form>
                       </div>
                   </blockquote>
@@ -100,6 +133,7 @@
               <input value="{{ guestbook_name }}" name="guestbook_name">
               <input type="submit" value="switch">
           </form>
+
           <a href="{{ url|safe }}">{{ url_linktext }}</a>
 </body>
 </html>

@@ -25,10 +25,10 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
+    <Compile Include="guestbook.py" />
     <Content Include="app.yaml" />
     <Content Include="index.html" />
     <Compile Include="appengine_config.py" />
-    <Compile Include="guestbook.py" />
     <Content Include="stylesheets\main.css" />
   </ItemGroup>
   <ItemGroup>
